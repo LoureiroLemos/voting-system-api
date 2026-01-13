@@ -1,0 +1,20 @@
+{
+  "name": "voting-system-api",
+  "version": "1.0.0",
+  "description": "Voting system backend built with Node.js, Express, MySQL and Socket.IO for realtime updates.",
+  "homepage": "https://github.com/LoureiroLemos/voting-system-api#readme",
+  "bugs": {
+    "url": "https://github.com/LoureiroLemos/voting-system-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoureiroLemos/voting-system-api.git"
+  },
+  "license": "ISC",
+  "author": "Pedro Loureiro de Lemos",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
