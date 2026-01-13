@@ -1,0 +1,15 @@
+CREATE TABLE polls (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE poll_options (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    poll_id INT NOT NULL,
+    option_text VARCHAR(255) NOT NULL,
+    votes INT DEFAULT 0,
+    FOREIGN KEY (poll_id) REFERENCES polls(id) ON DELETE CASCADE
+);
