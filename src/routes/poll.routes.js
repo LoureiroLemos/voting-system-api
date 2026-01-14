@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
     CASE
       WHEN NOW() < start_date THEN 'Não iniciada'
       WHEN NOW() > end_date THEN 'Finalizada'
-      ELSE 'Em Andamento'
+      ELSE 'Em andamento'
     END AS status
     FROM polls
     `;
