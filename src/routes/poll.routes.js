@@ -73,4 +73,49 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Rota para buscar detalhes de uma enquete (GET /:id)
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const queryPoll = `
+    SELECT id, start_date, end_date,
+    CASE
+      WHEN NOW() < start_date THEN 'Não iniciada'
+      WHEN NOW() > end_date THEN 'Finalizada'
+      ELSE 'Em andamento'
+    END AS status
+    FROM POLLS
+    WHERE id = ?
+    `;
+
+    const [pollResult] = await pool.execute(queryPoll, [id]);
+
+    if (pollResult.length === 0) {
+      return res.status(404).json({
+        error: "Enquete não encontrada.",
+      });
+    }
+
+    const poll = pollResult[0];
+
+    const queryOptions = `
+    SELECT id, option_text, votes
+    FROM poll_options
+    WHERE poll_id = ?
+    `;
+
+    const [optionsResult] = await pool.execute(queryOptions, [id]);
+
+    poll.options = optionsResult;
+
+    res.json(poll);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: "Erro ao buscar detalhes da enquete.",
+    });
+  }
+});
+
 export default router;
