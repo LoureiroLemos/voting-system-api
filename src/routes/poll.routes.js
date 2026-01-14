@@ -118,4 +118,41 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Rota para registrar voto (POST /polls/vote)
+router.post('/vote', async (req, res) => {
+  const { optionId } = req.body;
+
+  if(!optionId) {
+    return res.status(400).json({
+      error: "O ID da opção (optionId) é obrigatório."
+    });
+  }
+
+    try {
+      const queryUpdateVote = `
+      UPDATE poll_options
+      SET votes = votes + 1
+      WHERE id = ?
+      `;
+
+      const [result] = await pool.execute(queryUpdateVote, [optionId]);
+
+      if(result.affectedRows === 0) {
+        return res.status(404).json({
+          error: "Opção de voto não encontrada."
+        });
+      }
+
+      res.json({
+        message: "Voto registrado com sucesso."
+      });
+      
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        error: "Erro ao registrar voto."
+      });
+    }
+});
+
 export default router;
