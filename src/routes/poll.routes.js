@@ -1,10 +1,10 @@
-import { Router } from "express";
-import pool from "../config/database.js";
+import { Router } from 'express';
+import pool from '../config/database.js';
 
 const router = Router();
 
 // Rota para Criar Enquete (POST)
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   const { title, start_date, end_date, options } = req.body;
 
   if (!title || !start_date || !end_date || !options) {
@@ -13,9 +13,9 @@ router.post("/", async (req, res) => {
     });
   }
 
-  if(!Array.isArray(options) || options.length < 3){
+  if (!Array.isArray(options) || options.length < 3) {
     return res.status(400).json({
-      error: "A enquete deve ter no mínimo 3 opções de resposta."
+      error: "A enquete deve ter no mínimo 3 opções de resposta.",
     });
   }
 
@@ -41,7 +41,6 @@ router.post("/", async (req, res) => {
       message: "Enquete criada com sucesso!",
       pollId: pollId,
     });
-    
   } catch (error) {
     console.log(error);
     res.status(500).json({
