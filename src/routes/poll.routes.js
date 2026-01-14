@@ -13,6 +13,12 @@ router.post("/", async (req, res) => {
     });
   }
 
+  if(new Date(start_date) >= new Date(end_date)) {
+    return res.status(400).json({
+      error: "A data de término deve ser posterior à data de início",
+    });
+  }
+
   if (!Array.isArray(options) || options.length < 3) {
     return res.status(400).json({
       error: "A enquete deve ter no mínimo 3 opções de resposta.",
