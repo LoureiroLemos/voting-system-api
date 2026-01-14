@@ -79,7 +79,7 @@ router.get("/:id", async (req, res) => {
 
   try {
     const queryPoll = `
-    SELECT id, start_date, end_date,
+    SELECT id, title, start_date, end_date,
     CASE
       WHEN NOW() < start_date THEN 'Não iniciada'
       WHEN NOW() > end_date THEN 'Finalizada'
