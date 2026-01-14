@@ -143,6 +143,8 @@ router.post('/vote', async (req, res) => {
         });
       }
 
+      req.io.emit('new_vote', { optionId: Number(optionId)});
+
       res.json({
         message: "Voto registrado com sucesso."
       });
