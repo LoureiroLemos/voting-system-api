@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./index.css";
 import { PollList } from "./components/PollList";
+import { PollDetails } from "./components/PollDetails";
 
 function App() {
   const [selectedPollId, setSelectedPollId] = useState(null);
@@ -13,10 +14,10 @@ function App() {
 
       <main>
         {selectedPollId ? (
-        <div>
-          <button onClick={() => setSelectedPollId(null)}>Votar</button>
-          <h2>Visualizando enquete: {selectedPollId}</h2>
-        </div>
+          <PollDetails
+            pollId={selectedPollId}
+            onBack={() => setSelectedPollId(null)}
+          />
         ) : (
           <PollList onSelectPoll={(id) => setSelectedPollId(id)} />
         )}
