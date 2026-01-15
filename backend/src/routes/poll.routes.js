@@ -15,6 +15,6 @@ router.get("/", pollController.findAll);
 router.get("/:id", pollController.findOne);
 
 // Rota para registrar voto (POST /polls/vote)
-router.post("/vote", pollController.findOne);
+router.post("/vote", pollController.vote);
 
 export default router;
