@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import './PollList.css';
+// import './PollList.css';
 export function PollList({ onSelectPoll }) {
     const [polls, setPolls] = useState([]);
 
