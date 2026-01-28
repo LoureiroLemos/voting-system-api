@@ -10,7 +10,10 @@ class Controller {
       });
     }
 
-    if (new Date(start_date) >= new Date(end_date)) {
+    const finalStartDate = `${start_date} 00:00:00`;
+    const finalEndDate = `${end_date} 23:59:59`;
+
+    if (new Date(finalStartDate) >= new Date(finalEndDate)) {
       return res.status(400).json({
         error: "A data de término deve ser posterior à data de inicio.",
       });
@@ -19,7 +22,7 @@ class Controller {
     try {
       const [result] = await pool.execute(
         "INSERT INTO polls (title, start_date, end_date) VALUES (?, ?, ?)",
-        [title, start_date, end_date]
+        [title, finalStartDate, finalEndDate],
       );
 
       const pollId = result.insertId;
@@ -110,6 +113,31 @@ class Controller {
     }
 
     try {
+      const dateQuery = `
+        SELECT p.start_date, p.end_date
+        FROM polls p
+        JOIN poll_options po ON p.id = po.poll_id
+        where po.id = ?
+      `;
+
+      const [pollData] = await pool.execute(dateQuery, [optionId]);
+
+      if (pollData.length === 0) {
+        return res.status(404).json({ error: "Opção não encontrada." });
+      }
+
+      const now = new Date();
+      const start = new Date(pollData[0].start_date);
+      const end = new Date(pollData[0].end_date);
+
+      if (now < start) {
+        return res.status(400).json({ error: "A enquete ainda não começou." });
+      }
+
+      if (now > end) {
+        return res.status(400).json({ error: "A enquete já foi encerrada." });
+      }
+
       const query = "UPDATE poll_options SET votes = votes + 1 WHERE id = ?";
       const [result] = await pool.execute(query, [optionId]);
 
