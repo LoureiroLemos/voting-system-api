@@ -33,25 +33,42 @@ export function PollDetails({ pollId, onBack }) {
     };
   }, [pollId]);
 
-  function handleVote(optionId) {
-    fetch("http://localhost:3000/polls/vote", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ optionId }),
-    })
-      .then((res) => {
-        if (res.ok) alert("Voto registrado!");
-      })
-      .catch((error) => console.error("Erro ao votar: ", error));
+  async function handleVote(optionId) {
+    try {
+      const response = await fetch("http://localhost:3000/polls/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ optionId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Voto registrado!");
+      } else {
+        alert(data.error || "Erro ao registrar voto.");
+      }
+    } catch (error) {
+      console.error("Erro ao votar: ", error);
+      alert("Erro de conexão.");
+    }
   }
 
   if (!poll) {
     return <div className="poll-details-container">Carregando...</div>;
   }
 
+  const isVotable = poll.status === "Em andamento";
+
   return (
     <div className="poll-details-container">
       <h2>{poll.title}</h2>
+
+      <p
+        className={`status-badge ${poll.status === "Em andamento" ? "active" : "inactive"}`}
+      >
+        Status: {poll.status}
+      </p>
 
       <div className="options-list">
         {poll.options.map((option) => (
@@ -59,7 +76,12 @@ export function PollDetails({ pollId, onBack }) {
             <span>{option.option_text}</span>
             <div className="vote-info">
               <strong>{option.votes} votos</strong>
-              <button onClick={() => handleVote(option.id)}>Votar</button>
+              <button
+                onClick={() => handleVote(option.id)}
+                disabled={!isVotable}
+              >
+                Votar
+              </button>
             </div>
           </div>
         ))}
